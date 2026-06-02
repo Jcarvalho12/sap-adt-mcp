@@ -1,0 +1,39 @@
+agent:
+  name: jira_cursor
+  display_name: "Jira Issue Analyst"
+  version: "1.0.0"
+  description: >
+    Agente que se conecta ao Atlassian Jira, lê o histórico completo de um
+    chamado e retorna uma análise descritiva com os principais pontos e
+    sugestões sobre onde pode estar o problema.
+
+jira:
+  base_url: "https://engsmartdesk.atlassian.net"
+  # Autenticação via API Token (Atlassian Cloud)
+  # Defina as variáveis de ambiente:
+  #   JIRA_EMAIL    - e-mail da conta Atlassian
+  #   JIRA_API_TOKEN - token de API gerado em https://id.atlassian.com/manage-profile/security/api-tokens
+  email: ""
+  api_token: ""
+
+analysis:
+  # Número máximo de comentários a considerar na análise
+  max_comments: 200
+  # Incluir histórico de transições de status
+  include_transitions: true
+  # Incluir anexos (lista de nomes)
+  include_attachments: true
+  # Incluir subtasks
+  include_subtasks: true
+  # Incluir links entre issues
+  include_links: true
+  # Idioma da análise de saída
+  output_language: "pt-BR"
+
+  # --- Análise de Conteúdo dos Anexos ---
+  # Habilitar download e análise do conteúdo dos anexos (PDFs, imagens, docs)
+  analyze_attachment_content: true
+  # Número máximo de anexos a analisar (por issue)
+  max_attachments_to_analyze: 20
+  # Tamanho máximo total de texto extraído dos anexos (em caracteres)
+  max_attachment_text: 200000

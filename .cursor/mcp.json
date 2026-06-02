@@ -1,0 +1,26 @@
+{
+  "mcpServers": {
+    "sap-adt": {
+      "command": "python",
+      "args": ["sap-adt-python/scripts/run_mcp.py"]
+    },
+    "sap-hana": {
+      "command": "node",
+      "args": ["sap-hana-server/hana-mcp-server.js"],
+      "env": {
+        "HANA_HOST": "<seu-hana-host>",
+        "HANA_PORT": "443",
+        "HANA_USER": "<seu-usuario>",
+        "HANA_PASSWORD": "<sua-senha>",
+        "HANA_SCHEMA": "<seu-schema>",
+        "HANA_SSL": "true",
+        "HANA_ENCRYPT": "true",
+        "HANA_VALIDATE_CERT": "true",
+        "HANA_CONNECTION_TYPE": "auto",
+        "LOG_LEVEL": "info",
+        "ENABLE_FILE_LOGGING": "true",
+        "ENABLE_CONSOLE_LOGGING": "false"
+      }
+    }
+  }
+}

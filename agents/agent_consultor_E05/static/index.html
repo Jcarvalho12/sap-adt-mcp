@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Consultor SAP E05 — Análise &amp; melhoria ABAP</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="hero">
+        <div class="hero__brand">
+          <span class="hero__badge" aria-hidden="true">E05</span>
+          <div>
+            <h1>Consultor SAP <span class="hero__accent">Technical</span></h1>
+            <p class="hero__sub">
+              Descoberta ADT, análise de desempenho e Clean Core, diff lado a lado e clone seguro no
+              mesmo backend do agente.
+            </p>
+          </div>
+        </div>
+        <div class="hero__meta">
+          <span id="health-pill" class="pill pill--muted">Verificando…</span>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="panel panel--form" aria-labelledby="form-title">
+          <h2 id="form-title" class="panel__title">Objeto e conexão</h2>
+          <form id="analyze-form" class="form">
+            <label class="field">
+              <span class="field__label">System ID</span>
+              <input
+                name="system_id"
+                type="text"
+                autocomplete="off"
+                placeholder="Ex.: E05 (opcional se estiver no config)"
+              />
+            </label>
+            <label class="field">
+              <span class="field__label">Nome do objeto</span>
+              <input name="object_name" type="text" required autocomplete="off" placeholder="ZMY_REPORT" />
+            </label>
+            <label class="field">
+              <span class="field__label">Tipo</span>
+              <input name="object_type" type="text" required autocomplete="off" placeholder="PROGRAM, CLASS, PROG…" />
+            </label>
+            <label class="field">
+              <span class="field__label">Include (escopo opcional)</span>
+              <input name="include_name" type="text" autocomplete="off" placeholder="Apenas um include/programa" />
+            </label>
+            <label class="field">
+              <span class="field__label">Senha SAP</span>
+              <input
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                placeholder="Se não usar SAP_PASSWORD ou chaveiro"
+              />
+            </label>
+            <button type="submit" class="btn btn--primary" id="btn-analyze">
+              <span class="btn__text">Conectar e analisar</span>
+              <span class="btn__spinner" hidden aria-hidden="true"></span>
+            </button>
+          </form>
+        </section>
+
+        <section class="panel panel--results" id="results-panel" hidden>
+          <div class="panel__head">
+            <h2 class="panel__title">Resultados</h2>
+            <p class="panel__hint" id="scope-hint"></p>
+          </div>
+
+          <p class="panel__hint" id="source-file-info" hidden style="font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: var(--c-accent, #4f9cf7); margin-bottom: 0.5rem;"></p>
+          <div class="tabs" role="tablist" aria-label="Visualização">
+            <button type="button" class="tab is-active" role="tab" aria-selected="true" data-tab="findings">
+              Achados
+            </button>
+            <button type="button" class="tab" role="tab" aria-selected="false" data-tab="twocol">Diff 2 colunas</button>
+            <button type="button" class="tab" role="tab" aria-selected="false" data-tab="unified">Diff unificado</button>
+            <button type="button" class="tab" role="tab" aria-selected="false" data-tab="meta">Metadados</button>
+          </div>
+
+          <div class="tab-panels">
+            <div class="tab-panel is-active" id="panel-findings" role="tabpanel">
+              <article class="markdown-body" id="findings-md"></article>
+            </div>
+            <div class="tab-panel" id="panel-twocol" role="tabpanel" hidden>
+              <pre class="code-block" id="twocol-pre"></pre>
+            </div>
+            <div class="tab-panel" id="panel-unified" role="tabpanel" hidden>
+              <pre class="code-block" id="unified-pre"></pre>
+            </div>
+            <div class="tab-panel" id="panel-meta" role="tabpanel" hidden>
+              <pre class="code-block code-block--json" id="meta-pre"></pre>
+            </div>
+          </div>
+
+          <section class="clone" aria-labelledby="clone-title">
+            <h3 id="clone-title" class="clone__title">Criar objeto melhorado (após revisão)</h3>
+            <p class="clone__note">
+              Confirme o diff acima. O clone usa o código sugerido pelo agente e as mesmas ferramentas ADT do MCP.
+            </p>
+            <form id="clone-form" class="form form--inline">
+              <label class="field">
+                <span class="field__label">Novo nome</span>
+                <input name="new_name" type="text" required autocomplete="off" placeholder="ZMY_REPORT_NEW" />
+              </label>
+              <label class="field">
+                <span class="field__label">Pacote</span>
+                <input name="package" type="text" required autocomplete="off" placeholder="ZPKG ou $TMP" />
+              </label>
+              <label class="field">
+                <span class="field__label">Transporte (opcional)</span>
+                <input name="transport" type="text" autocomplete="off" placeholder="Deixe vazio para criar se necessário" />
+              </label>
+              <label class="field field--wide">
+                <span class="field__label">Descrição do transporte (se for criado)</span>
+                <input
+                  name="transport_description"
+                  type="text"
+                  autocomplete="off"
+                  placeholder="Consultant clone …"
+                />
+              </label>
+              <button type="submit" class="btn btn--secondary" id="btn-clone">
+                <span class="btn__text">Criar e aplicar melhorias</span>
+                <span class="btn__spinner" hidden aria-hidden="true"></span>
+              </button>
+            </form>
+          </section>
+
+          <pre class="log" id="clone-log" hidden></pre>
+        </section>
+      </main>
+
+      <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+    </div>
+    <script src="/static/app.js" type="module"></script>
+  </body>
+</html>

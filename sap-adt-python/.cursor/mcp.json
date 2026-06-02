@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "sap-adt": {
+      "command": "python",
+      "args": ["scripts/run_mcp.py"]
+    }
+  }
+}

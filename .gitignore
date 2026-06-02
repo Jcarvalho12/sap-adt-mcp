@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+.venv/
+venv/
+.env
+
+# Node
+node_modules/
+
+# Sensitive files
+model_save_passwword
+Token_Jira_Cursor.txt
+*.key
+*.pem
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+*.swp
+*.swo
+
+# Git backup dirs
+.git_backup/

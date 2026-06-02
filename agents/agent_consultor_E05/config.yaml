@@ -1,0 +1,96 @@
+# agent_consultor_E05 — SAP Technical Consultant Agent
+# Utiliza EXCLUSIVAMENTE as ferramentas e parâmetros documentados em:
+#   sap-adt-python/docs/MCP_COMMAND_REFERENCE.md
+# Servidor MCP: user-sap-adt
+
+agent:
+  name: agent_consultor_E05
+  display_name: "Senior SAP Technical Consultant (E05)"
+  version: "2.0.0"
+
+sap_adt_python:
+  src_path: "../../sap-adt-python/src"
+
+connection:
+  system_id: "E05"
+  host: ""
+  port: 0
+  client: ""
+  user: ""
+  language: ""
+
+object_type_aliases:
+  PROGRAM: PROG
+  REPORT: PROG
+  PROG: PROG
+  INCLUDE: PROG
+  "INCLUDE PROGRAM": PROG
+  CLASS: CLAS
+  CLAS: CLAS
+  INTERFACE: INTF
+  INTF: INTF
+  "FUNCTION GROUP": FUGR
+  FUGR: FUGR
+  "FUNCTION MODULE": FUGR
+  TABLE: TABL
+  TABL: TABL
+
+# Pasta temporária para armazenar o código-fonte lido do SAP (sap_read_source save_to)
+# e o arquivo melhorado antes de enviar ao SAP (sap_write_source source_file).
+# Se vazio, usa o diretório temporário do SO (%TEMP%/agent_consultor_E05).
+# Pode ser absoluto (ex.: "E:\\ENGDB\\temp") ou relativo a esta pasta do agente.
+temp_dir: ""
+
+analysis:
+  max_dependency_depth: 3
+  syntax_check_retries: 2
+
+# Integração MCP — alinhada estritamente a MCP_COMMAND_REFERENCE.md
+mcp:
+  reference_doc: "../../sap-adt-python/docs/MCP_COMMAND_REFERENCE.md"
+  # §1.3 — após sap_connect, chamar sap_discovery() (XML grande — desligado por defeito)
+  discovery_after_connect: false
+  clone_workflow:
+    # §4.2 — listar transports antes de criar objeto / transporte
+    list_transports_before_create: true
+    # Se true, reutiliza o primeiro transport aberto quando o utilizador não passou TR
+    reuse_first_open_transport: false
+    # §4.5 + §4.1 — após sap_create_*, diagnosticar CTS e lock antes de sap_write_source
+    transport_check_after_create: true
+    # §4.4 — Perigoso em produção: libertar ordem após ativação
+    release_transport_after_activate: false
+
+# Ferramentas MCP disponíveis (21) — conforme MCP_COMMAND_REFERENCE.md
+# Nenhuma ferramenta fora desta lista é utilizada pelo agente.
+mcp_tools:
+  # §1 Conexão e credenciais
+  connection:
+    - sap_save_password
+    - sap_connect
+    - sap_discovery
+    - sap_list_environments
+    - sap_delete_password
+  # §2 Repositório ABAP
+  repository:
+    - sap_search
+    - sap_browse_package
+    - sap_object_metadata
+  # §3 Código-fonte
+  source:
+    - sap_read_source
+    - sap_write_source
+    - sap_activate
+    - sap_syntax_check
+  # §4 Gerenciamento de transports
+  transport:
+    - sap_check_lock
+    - sap_list_transports
+    - sap_create_transport
+    - sap_release_transport
+    - sap_transport_check
+  # §5 Criação e exclusão de objetos
+  objects:
+    - sap_create_program
+    - sap_create_class
+    - sap_create_interface
+    - sap_delete_object

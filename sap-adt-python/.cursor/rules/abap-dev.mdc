@@ -1,0 +1,59 @@
+---
+description: Rules for ABAP development using SAP ADT MCP tools
+globs:
+alwaysApply: true
+---
+
+# ABAP Development via SAP ADT
+
+You have access to SAP ADT MCP tools (server **user-sap-adt** in Cursor, key `sap-adt` in `.cursor/mcp.json`) that let you interact with the SAP ABAP system directly from Cursor.
+
+## Connection
+
+- The SAP system is **ED2** at `awsntwpstx01.engdb.infra:8000`, client `500`, user `egoetz`.
+- Always call `sap_connect` before any SAP operation if not already connected.
+- Preferred: use `sap_connect(system_id="ED2")` to load saved credentials from the OS credential manager.
+- If no saved credentials exist, use `sap_save_password` to store them first.
+- Fallback: password can also come from `SAP_PASSWORD` environment variable.
+
+## Reading ABAP Code
+
+- Use `sap_search` with wildcards (e.g., `Z*`, `ZCL_*`) to find objects.
+- Use `sap_read_source` with the correct `object_type`:
+  - `PROG` for programs/reports
+  - `CLAS` for classes
+  - `INTF` for interfaces
+  - `FUGR` for function groups
+
+## Modifying ABAP Code
+
+- **Always use `sap_write_source`** — it handles locking, transport assignment, writing, activation, and unlocking in one call.
+- If the object is in a non-`$TMP` package, you **must** provide a `transport_request`.
+- If no transport is available, create one with `sap_create_transport` first.
+- Check lock status with `sap_check_lock` before attempting modifications.
+- If an object is locked by another user, do NOT attempt to modify it.
+
+## Activation
+
+- `sap_write_source` activates by default (`activate=True`).
+- If activation fails, read the error messages (line, column, text) and fix the ABAP code.
+- Use `sap_syntax_check` for a quick syntax validation without activating.
+
+## Transport Requests
+
+- Use `sap_list_transports` to see open transports for the user.
+- Use `sap_transport_check` to determine if an object needs a transport.
+- Transport numbers follow the pattern: `ED2K9XXXXX`.
+- Never release a transport (`sap_release_transport`) unless explicitly asked.
+
+## Object Creation
+
+- Use `sap_create_program`, `sap_create_class`, or `sap_create_interface` to create new objects.
+- Always specify the target package.
+- For temporary development, use package `$TMP`.
+
+## Important
+
+- ABAP code is case-insensitive but conventionally written in UPPERCASE for keywords.
+- Object names in SAP are uppercase (the tools handle conversion automatically).
+- Always read the current source before making changes to avoid overwriting other changes.

@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sap-adt-python"
+version = "0.1.0"
+description = "ABAP Development Workbench - SAP ADT REST API client and MCP server for Cursor IDE"
+requires-python = ">=3.10"
+dependencies = [
+    "requests>=2.31",
+    "mcp>=1.0",
+    "lxml>=5.0",
+    "keyring>=25.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.23",
+]
+
+[project.scripts]
+sap-adt-mcp = "sap_adt.mcp_server:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

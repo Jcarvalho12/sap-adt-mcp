@@ -1,0 +1,12 @@
+# UI web (FastAPI) + mesmas dependências que sap-adt-python para importar sap_adt.mcp_server.
+# Uso: pip install -r requirements-web.txt
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+pydantic>=2.0.0
+# sap-adt-python (ver ../../sap-adt-python/requirements.txt)
+requests>=2.31
+mcp>=1.0
+lxml>=5.0
+keyring>=25.0
+# agente (config.yaml)
+PyYAML>=6.0
